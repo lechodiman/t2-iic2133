@@ -7,19 +7,6 @@
 #define INITIAL_SIZE (256)
 #define MAX_CHAIN_LENGTH (8)
 
-typedef struct hashmap_node{
-    char* key;
-    int in_use;
-    any_t data;
-} HashmapNode;
-
-typedef struct hashmap_map{
-    int table_size;
-    int size;
-    /* Pointer to array of hashmap nodes*/
-    HashmapNode* data;
-} HashMap;
-
 /*
  * Return an empty hashmap, or NULL on failure.
  */
@@ -137,7 +124,7 @@ int hashmap_rehash(HashMap* m){
 /*
  * Add a pointer to the hashmap with some key
  */
-int hashmap_put(HashMap* m, char* key, any_t value){
+int hashmap_put(HashMap* m, char* key, char* value){
     int index;
 
     /* Find a place to put our value */
@@ -161,7 +148,7 @@ int hashmap_put(HashMap* m, char* key, any_t value){
 /*
  * Get your pointer out of the hashmap with a key
  */
-int hashmap_get(HashMap* m, char* key, any_t *arg){
+int hashmap_get(HashMap* m, char* key, char* arg){
     int curr;
     int i;
 
