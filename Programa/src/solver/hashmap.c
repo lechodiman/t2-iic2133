@@ -293,6 +293,16 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     return MAP_MISSING;
 }
 
+bool hashmap_in_map(HashMap* m, char* key) {
+  char arg[] = "";
+
+  if (hashmap_get(m, key, arg) == MAP_OK) {
+    return true;
+  }
+
+  return false;
+}
+
 /* Deallocate the hashmap */
 void hashmap_free(HashMap* m){
     free(m->data);

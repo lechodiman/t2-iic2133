@@ -32,4 +32,5 @@ typedef struct hashmap_map{
 HashMap* hashmap_init();
 int hashmap_put(HashMap* m, char* key, char* value);
 int hashmap_get(HashMap* m, char* key, char* arg);
+bool hashmap_in_map(HashMap* m, char* key);
 void hashmap_free(HashMap* m);
