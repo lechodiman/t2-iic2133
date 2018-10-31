@@ -8,7 +8,7 @@
 QNode* new_node(int data) 
 { 
     QNode *node = (QNode*)malloc(sizeof(QNode)); 
-    node->key = k; 
+    node->key = data; 
     node->next = NULL; 
     return node;
 } 
