@@ -40,11 +40,11 @@ void queue_add(Queue* q, int data)
 } 
   
 // Function to remove a key from given queue q 
-QNode* queue_remove(Queue *q) 
+int queue_remove(Queue *q) 
 { 
-    // If queue is empty, return NULL. 
+    // If queue is empty, return -1. 
     if (q->head == NULL) 
-       return NULL; 
+       return -1; 
   
     // Store previous head and move head one node ahead 
     QNode* temp = q->head; 
@@ -53,7 +53,10 @@ QNode* queue_remove(Queue *q)
     // If head becomes NULL, then change tail also as NULL 
     if (q->head == NULL) 
        q->tail = NULL;
-    return temp; 
+    
+    int key = temp->key; 
+    free(temp);
+    return key;
 }
 
 bool queue_is_empty(Queue* q)
@@ -64,8 +67,7 @@ bool queue_is_empty(Queue* q)
 void queue_free(Queue* q)
 {
 	while (!queue_is_empty(q)) {
-		QNode* node = queue_remove(q);
-		free(node);
+		queue_remove(q);
 	}
 
 	free(q);

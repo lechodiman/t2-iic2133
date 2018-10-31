@@ -15,5 +15,5 @@ typedef struct queue
 
 Queue* queue_init();
 void queue_add(Queue* q, int data);
-QNode* queue_remove(Queue *q);
+int queue_remove(Queue *q);
 void queue_free(Queue* q);
