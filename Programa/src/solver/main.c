@@ -15,20 +15,5 @@ int main(int argc, char *argv[])
     }
 
 
-    HashMap* m = hashmap_init();
-    char msg[] = "hola";
-    char value[] = "value";
-    hashmap_put(m, msg, value);
-    bool in_map = hashmap_in_map(m, "chao");
-
-    printf("chao IN MAP? %d\n", in_map);
-
-    char arg[10];
-    hashmap_get(m, "hola", arg);
-
-    printf("arg: %s\n", arg);
-
-    hashmap_free(m);
-
     return 0;
 }
