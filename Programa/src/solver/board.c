@@ -10,6 +10,7 @@ Board* board_init(int dimension)
     Board* board = (Board* )malloc(sizeof(Board));
     board->dimension = dimension;
 
+    board->cell = (int** )malloc(sizeof(int*) * dimension);
     for (int row = 0; row < dimension; row++)
     {
         board->cell[row] = (int* )malloc(sizeof(int) * dimension);
@@ -36,7 +37,7 @@ void board_set_cell(Board* board, int row, int col, int value)
         board->col_zero= col;
     }
 
-    board->cell[row][col] = value
+    board->cell[row][col] = value;
 }
 
 void board_move_up(Board* board)
@@ -137,13 +138,13 @@ void board_move_right(Board* board)
 
 void board_to_string(Board* board, char* buffer)
 {
-    char str[16];
+    char str[17] = "";
 
     for (int row = 0; row < board->dimension; row++)
     {
         for (int col = 0; col < board->dimension; col++)
         {
-            char hex[1];
+            char hex[2] = "";
 
             int elem = board->cell[row][col];
             /* Get hexadecimal respresentation*/
@@ -167,8 +168,9 @@ void board_to_matrix(Board* board, char* string_board)
         for (int col = 0; col < board->dimension; col++)
         {
             /* convert from hexadecimal to int */
-            int number = (int) strtol(string_board[i], NULL, 16);
-            printf("number at %i: %i \n", i, number);
+            char hexa_number= string_board[i];
+
+            int number = (int) strtol(&hexa_number, NULL, 16);
             /* add to board*/
             board_set_cell(board, row, col, number);
             i++;
@@ -178,17 +180,38 @@ void board_to_matrix(Board* board, char* string_board)
 
 bool board_is_solution(Board* board)
 {
-    char buffer[16];
+    char buffer_string[17] = "";
+    char solution[17] = "";
     
-    board_to_string(board, buffer);
     if (board->dimension == 4)
     {
-        char solution[] = "123456789abcdef0";        
-    } else if (board->dimension == 3) {
-        char solution[] = "123456780";
+        strcpy(solution, "123456789abcdef0");        
+    } 
+
+    if (board->dimension == 3) {
+        strcpy(solution,"123456780");
     }
 
-    return (strcmp(buffer, solution) == 0);
+    board_to_string(board, buffer_string);
+    
+    if (strcmp(buffer_string, solution) == 0) {
+        return true;
+    }
+
+    return false;
+}
+
+void board_print(Board* board)
+{
+    for (int row=0; row < board->dimension; row++)
+    {
+        for(int column=0; column < board->dimension; column++)
+        {
+            printf("%d\t", board->cell[row][column]);
+        }
+        printf("\n");
+    }
+    printf("\n");
 }
 
 void board_free(Board* board)
@@ -197,7 +220,7 @@ void board_free(Board* board)
     {
         free(board->cell[row]);
     }
-    
+
     free(board->cell);
     free(board);
 }
