@@ -18,7 +18,8 @@ HashMap* hashmap_init() {
         return NULL;
     }
 
-    m->data = (HashmapNode*) malloc(INITIAL_SIZE * sizeof(HashmapNode));
+    /* Use of calloc to zero-initialize the buffer, slower than malloc */
+    m->data = (HashmapNode*) calloc(INITIAL_SIZE, sizeof(HashmapNode));
 
     if(!m->data){
         hashmap_free(m);
@@ -179,7 +180,7 @@ int hashmap_hash(HashMap* m, char* key){
     int curr;
     int i;
 
-    /* If full, return immediately */
+    /* If full (loading factor set to half of max size), return immediately */
     if(m->size >= (m->table_size/2)) return MAP_FULL;
 
     /* Find the best index */
@@ -210,7 +211,7 @@ int hashmap_rehash(HashMap* m){
 
     /* Setup the new elements */
     HashmapNode* temp = (HashmapNode *)
-        malloc(2 * m->table_size * sizeof(HashmapNode));
+        calloc(2 * m->table_size, sizeof(HashmapNode));
     if(!temp) return MAP_OMEM;
 
     /* Update the array */
@@ -278,8 +279,9 @@ int hashmap_get(HashMap* m, char* key, char* arg){
 
         int in_use = m->data[curr].in_use;
         if (in_use == 1){
-            if (strcmp(m->data[curr].key,key)==0){
-                *arg = (m->data[curr].data);
+            if (strcmp(m->data[curr].key, key)==0){
+                strcpy(arg, m->data[curr].data);
+                //*arg = m->data[curr].data;
                 return MAP_OK;
             }
         }
