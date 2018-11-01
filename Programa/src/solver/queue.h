@@ -3,7 +3,7 @@
 
 typedef struct queue_node 
 { 
-    int key; 
+    char data[17]; 
     struct queue_node *next; 
 } QNode;
   

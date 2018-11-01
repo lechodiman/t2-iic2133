@@ -2,14 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
   
 // A utility function to create a new linked list node. 
-QNode* new_node(int data) 
+QNode* new_node(char* data) 
 { 
     QNode *node = (QNode*)malloc(sizeof(QNode)); 
-    node->key = data; 
-    node->next = NULL; 
+    strcpy(node->data, data);
+    node->next = NULL;
     return node;
 } 
   
@@ -22,7 +23,7 @@ Queue* queue_init()
 } 
   
 // The function to add a key k to q 
-void queue_add(Queue* q, int data) 
+void queue_add(Queue* q, char* data) 
 { 
     // Create a new LL node 
     QNode* temp = new_node(data); 
@@ -40,7 +41,7 @@ void queue_add(Queue* q, int data)
 } 
   
 // Function to remove a key from given queue q 
-int queue_remove(Queue *q) 
+void queue_remove(Queue *q, char* buffer) 
 { 
     // If queue is empty, return -1. 
     if (q->head == NULL) 
@@ -54,9 +55,9 @@ int queue_remove(Queue *q)
     if (q->head == NULL) 
        q->tail = NULL;
     
-    int key = temp->key; 
+    strcpy(buffer, temp->data); 
     free(temp);
-    return key;
+    return;
 }
 
 bool queue_is_empty(Queue* q)
