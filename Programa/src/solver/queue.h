@@ -14,6 +14,7 @@ typedef struct queue
 } Queue;
 
 Queue* queue_init();
-void queue_add(Queue* q, int data);
-int queue_remove(Queue *q);
+void queue_add(Queue* q, char* data);
+int queue_remove(Queue *q, char* buffer);
+bool queue_is_empty(Queue* q);
 void queue_free(Queue* q);
