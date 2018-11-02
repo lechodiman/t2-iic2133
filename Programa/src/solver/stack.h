@@ -10,6 +10,7 @@ typedef struct stack_node
 typedef struct stack 
 { 
     SNode *head;
+    int size;
 } Stack;
 
 Stack* stack_init();

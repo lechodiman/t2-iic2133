@@ -18,7 +18,8 @@ SNode* new_stack_node(char* data)
 Stack* stack_init()
 { 
     Stack *q = (Stack*)malloc(sizeof(Stack)); 
-    q->head = NULL; 
+    q->head = NULL;
+    q->size = 0;
     return q;
 } 
   
@@ -30,6 +31,7 @@ void stack_add(Stack* q, char* data)
   
     temp->next = q->head;
     q->head = temp; 
+    q->size++;
     
     return;
 } 
@@ -47,6 +49,7 @@ int stack_remove(Stack *q, char* buffer)
 
     strcpy(buffer, temphead->data); 
     free(temphead);
+    q->size--;
 
     return 0;
 }

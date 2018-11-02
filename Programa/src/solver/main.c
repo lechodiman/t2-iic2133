@@ -7,6 +7,51 @@
 #include "board.h"
 #include "stack.h"
 
+void write_path(Board* board, HashMap* m, Stack* s, FILE* output)
+{
+    char curr_state[17] = "";
+    char parent_state[17] = "";
+    char line_diff[10] = "";
+
+    if (board->dimension == 4)
+    {
+        strcpy(curr_state, "123456789abcdef0");        
+    } 
+
+    if (board->dimension == 3) {
+        strcpy(curr_state,"123456780");
+    }
+
+    /* Look for parent state */
+    while (strcmp(curr_state, "start") != 0)
+    {
+        /* Get parent state */
+        hashmap_get(m, curr_state, parent_state);
+
+        board_diff(board, curr_state, parent_state, line_diff);
+
+        stack_add(s, line_diff);
+
+        /* Update curr state */
+        strcpy(curr_state, parent_state);
+    } 
+
+    /* Remove extra step */
+    stack_remove(s, line_diff);
+
+    /* Write output*/
+    fprintf(output, "%d\n", s->size);
+
+    while (!stack_is_empty(s))
+    {
+        stack_remove(s, line_diff);
+
+        /* Write in file */ 
+        fprintf(output, "%s\n", line_diff);
+    }
+
+}
+
 void bfs(Board* board, Queue* q, HashMap* m)
 {
     char initial_string_board[17] = "";
@@ -181,24 +226,8 @@ int main(int argc, char *argv[])
     printf("INITIAL MATRIX BEFORE BFS:\n");
     board_print(board);
 
-    // bfs(board, q, m);
-    // write_path(m, s);
-
-    stack_add(s, "123456780");
-    stack_add(s, "123456708");
-
-    char out_stack[17] = "";
-
-    while (!stack_is_empty(s))
-    {
-        stack_remove(s, out_stack);
-        printf("REMOVED: %s\n", out_stack);        
-    }
-
-    char diff[10] = "";
-    board_diff(board, "123405678", "103425678", diff);
-
-    printf("diff: %s\n", diff);
+    bfs(board, q, m);
+    write_path(board, m, s, output);
 
     board_free(board);
     queue_free(q);
