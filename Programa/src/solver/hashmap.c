@@ -5,8 +5,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#define INITIAL_SIZE (4096)
-#define MAX_CHAIN_LENGTH (32)
+#define INITIAL_SIZE (16384)
+#define MAX_CHAIN_LENGTH (8)
 
 /*
  * Return an empty hashmap, or NULL on failure.
