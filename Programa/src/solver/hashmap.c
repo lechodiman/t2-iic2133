@@ -172,6 +172,46 @@ unsigned int hashmap_hash_int(HashMap* m, char* keystring){
     return key % m->table_size;
 }
 
+unsigned int hashmap_so_hash_int(HashMap* m, char* keystring)
+{
+  int idx = 0;
+
+  for (int i = 0; i < 3; ++i)
+  {
+    char hexa = keystring[i];
+
+    int val = (int) strtol(&hexa, NULL, 16);
+
+    idx |= i << (val * 4);
+  }
+
+  return idx % m->table_size;
+}
+
+unsigned int JSHash(HashMap* m, const char* str, unsigned int len)
+{
+   unsigned int hash = 1315423911;
+   unsigned int i    = 0;
+
+   for(i = 0; i < len; str++, i++)
+   {
+      hash ^= ((hash << 5) + (*str) + (hash >> 2));
+   }
+
+   return hash % m->table_size;
+}
+
+unsigned long help_me_hash(HashMap* m, char *str)
+{
+    unsigned long hash = 5381;
+    int c;
+
+    while (c = *str++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return hash % m->table_size;
+}
+
 /*
  * Return the integer of the location in data
  * to store the point to the item, or MAP_FULL.
@@ -184,6 +224,7 @@ int hashmap_hash(HashMap* m, char* key){
     if(m->size >= (m->table_size/2)) return MAP_FULL;
 
     /* Find the best index */
+    // curr = help_me_hash(m, key);
     curr = hashmap_hash_int(m, key);
 
     /* Linear probing */
@@ -276,6 +317,7 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     int i;
 
     /* Find data location */
+    // curr = help_me_hash(m, key);
     curr = hashmap_hash_int(m, key);
 
     printf("TRYING TO GET: %s AT: %d\n", key, curr);
