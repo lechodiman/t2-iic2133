@@ -220,7 +220,7 @@ int board_diff(Board* board, char* board_children, char* board_parent, char* buf
             col = i % (board->dimension);
 
             // printf("index: %d\n", i);
-            sprintf(output, "%d,%d", row, col);
+            sprintf(output, "%d,%d", col, row);
 
             strcpy(buffer, output);
 
