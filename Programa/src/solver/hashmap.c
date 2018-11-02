@@ -5,8 +5,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#define INITIAL_SIZE (256)
-#define MAX_CHAIN_LENGTH (8)
+#define INITIAL_SIZE (4096)
+#define MAX_CHAIN_LENGTH (32)
 
 /*
  * Return an empty hashmap, or NULL on failure.
@@ -280,14 +280,13 @@ int hashmap_get(HashMap* m, char* key, char* arg){
 
     printf("TRYING TO INSERT: %s AT: %d\n", key, curr);
 
-    /*
+    /* If curr is not in use, return */
     if (m->data[curr].in_use == 0)
     {
       return MAP_MISSING;
     }
-    */
 
-    /* Linear probing, if necessary */
+    /* Else, if it is used, do linear probing */
     for(i = 0; i<MAX_CHAIN_LENGTH; i++){
 
         int in_use = m->data[curr].in_use;

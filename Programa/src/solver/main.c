@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include "queue.h"
 #include "hashmap.h"
 #include "board.h"
@@ -160,8 +161,11 @@ int main(int argc, char *argv[])
         for (int col = 0; col < dimension; ++col)
         {
             int number;
+            char hex[2] = "";
             fscanf(test_file, "%d,\n", &number);
-            string_board[i] = number + '0';
+            sprintf(hex, "%x", number);
+            strcat(string_board, hex);
+            // string_board[i] = hex;
             i++;
         }
     }
