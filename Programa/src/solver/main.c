@@ -193,7 +193,12 @@ int main(int argc, char *argv[])
     {
         stack_remove(s, out_stack);
         printf("REMOVED: %s\n", out_stack);        
-    }    
+    }
+
+    char diff[10] = "";
+    board_diff(board, "123405678", "103425678", diff);
+
+    printf("diff: %s\n", diff);
 
     board_free(board);
     queue_free(q);

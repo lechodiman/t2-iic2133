@@ -201,6 +201,38 @@ bool board_is_solution(Board* board)
     return false;
 }
 
+int board_diff(Board* board, char* board_children, char* board_parent, char* buffer)
+{
+    int i = 0;
+    int row;
+    int col;
+    char output[10] = "";
+
+    while (i < board->dimension * board->dimension)
+    {
+        /* convert from hexadecimal to int */
+        char hexa_number = board_parent[i];
+        int number = (int)strtol(&hexa_number, NULL, 16);
+
+        if ( number != 0 && board_parent[i] != board_children[i])
+        {
+            row = (int) (i / (board->dimension));
+            col = i % (board->dimension);
+
+            // printf("index: %d\n", i);
+            sprintf(output, "%d,%d", row, col);
+
+            strcpy(buffer, output);
+
+            return 0;
+        }
+
+        i++;
+    }
+
+    return -1;
+}
+
 void board_print(Board* board)
 {
     for (int row=0; row < board->dimension; row++)

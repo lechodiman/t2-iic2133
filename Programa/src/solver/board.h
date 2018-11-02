@@ -20,5 +20,6 @@ void board_to_string(Board* board, char* buffer);
 void board_to_matrix(Board* board, char* string_board);
 bool board_is_solution(Board* board);
 void board_print(Board* board);
+int board_diff(Board* board, char* board_children, char* board_parent, char* buffer);
 void board_free(Board* board);
 
