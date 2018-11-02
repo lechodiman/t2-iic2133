@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 #define INITIAL_SIZE (16384)
-#define MAX_CHAIN_LENGTH (8)
+#define MAX_CHAIN_LENGTH (16384)
 
 /*
  * Return an empty hashmap, or NULL on failure.
@@ -320,7 +320,7 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     // curr = help_me_hash(m, key);
     curr = hashmap_hash_int(m, key);
 
-    printf("TRYING TO GET: %s AT: %d\n", key, curr);
+    // printf("TRYING TO GET: %s AT: %d\n", key, curr);
 
     /* If curr is not in use, return */
     if (m->data[curr].in_use == 0)
@@ -336,7 +336,7 @@ int hashmap_get(HashMap* m, char* key, char* arg){
             if (strcmp(m->data[curr].key, key)==0){
                 strcpy(arg, m->data[curr].data);
                 //*arg = m->data[curr].data;
-                printf("found at index: %d, key found: %s\n", curr, m->data[curr].key);
+                // printf("found at index: %d, key found: %s\n", curr, m->data[curr].key);
                 return MAP_OK;
             }
         }
@@ -353,7 +353,7 @@ bool hashmap_in_map(HashMap* m, char* key) {
   char arg[17] = "";
 
   if (hashmap_get(m, key, arg) == MAP_OK) {
-    printf("key %s already in map\n", key);
+    printf("THIS TABLE %s ALREADY IN MAP\n", key);
     return true;
   }
 
