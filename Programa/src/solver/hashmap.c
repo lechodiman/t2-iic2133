@@ -256,8 +256,10 @@ int hashmap_put(HashMap* m, char* key, char* value){
     }
 
     /* Set the data */
-    m->data[index].data = value;
-    m->data[index].key = key;
+    strcpy(m->data[index].data, value);
+    // m->data[index].data = value;
+    strcpy(m->data[index].key, key);
+    // m->data[index].key = key;
     m->data[index].in_use = 1;
     m->size++; 
 
@@ -276,12 +278,14 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     /* Find data location */
     curr = hashmap_hash_int(m, key);
 
-    printf("TRYING TO GET AT: %d\n", curr);
+    printf("TRYING TO INSERT: %s AT: %d\n", key, curr);
 
+    /*
     if (m->data[curr].in_use == 0)
     {
       return MAP_MISSING;
     }
+    */
 
     /* Linear probing, if necessary */
     for(i = 0; i<MAX_CHAIN_LENGTH; i++){

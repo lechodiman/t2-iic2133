@@ -17,9 +17,9 @@
 #define MAP_OK 0 	/* OK */
 
 typedef struct hashmap_node{
-    char* key;
+    char key[17];
     int in_use;
-    char* data;
+    char data[17];
 } HashmapNode;
 
 typedef struct hashmap_map{
