@@ -5,6 +5,129 @@
 #include "hashmap.h"
 #include "board.h"
 
+
+void bfs(Board* board, Queue* q, HashMap* m)
+{
+    char initial_string_board[17] = "";
+    board_to_string(board, initial_string_board);
+    printf("initial_string_board: %s\n", initial_string_board);
+
+    queue_add(q, initial_string_board);
+    hashmap_put(m, initial_string_board, "start");
+
+    bool solved = false;
+
+    if (board_is_solution(board))
+    {
+        printf("Solution found!\n");
+        return;
+    }
+
+    /* Initialize previous and current states */
+    char prev_string_board[17] = "";
+    char curr_string_board[17] = "";
+
+    /* Previous board state starts as the initial */
+    // strcpy(prev_string_board, initial_string_board);
+
+    /* While there are states to explore */    
+    while (!queue_is_empty(q))
+    {
+        /* Get state from queue */
+        queue_remove(q, prev_string_board);
+        /* Insert state to board */
+        board_to_matrix(board, prev_string_board);
+        printf("EXPLORING NEW MATRIX:\n");
+        board_print(board);
+
+        /* If it is solution*/
+        if (board_is_solution(board) && !solved)
+        {
+            solved = true;
+            printf("Solution found!\n");
+            return;
+        }
+
+        /* Explore states*/
+
+        /* Explore left*/
+        board_move_left(board);
+        /* Get string representation */
+        board_to_string(board, curr_string_board);
+        /* If state not in hashmap*/
+        if (!hashmap_in_map(m, curr_string_board))
+        {
+            printf("ADDED LEFT:\n");
+            board_print(board);
+
+            /* Add to queue*/
+            queue_add(q, curr_string_board);
+            /* Add curr: prev to hashmap*/
+            hashmap_put(m, curr_string_board, prev_string_board);
+        }
+        /* Reset to state before explore */
+        board_move_right(board);
+
+
+        /* Explore right*/
+        board_move_right(board);
+        /* Get string representation */
+        board_to_string(board, curr_string_board);
+        /* If state not in hashmap*/
+        if (!hashmap_in_map(m, curr_string_board))
+        {   
+            printf("ADDED RIGHT:\n");
+            board_print(board);
+
+            /* Add to queue */
+            queue_add(q, curr_string_board);
+            /* Add curr: prev to hashmap*/
+            hashmap_put(m, curr_string_board, prev_string_board);
+        }
+        /* Reset to state before explore */
+        board_move_left(board);
+
+        /* Explore down*/
+        board_move_down(board);
+        /* Get string representation */
+        board_to_string(board, curr_string_board);
+        /* If state not in hashmap*/
+        if (!hashmap_in_map(m, curr_string_board))
+        {   
+            printf("ADDED DOWN:\n");
+            board_print(board);
+
+            /* Add to queue */
+            queue_add(q, curr_string_board);
+            /* Add curr: prev to hashmap*/
+            hashmap_put(m, curr_string_board, prev_string_board);
+        }
+        /* Reset to state before explore */
+        board_move_up(board);
+
+        /* Explore up*/
+        board_move_up(board);
+        /* Get string representation */
+        board_to_string(board, curr_string_board);
+        /* If state not in hashmap*/
+        if (!hashmap_in_map(m, curr_string_board))
+        {   
+            printf("ADDED UP:\n");
+            board_print(board);
+
+            /* Add to queue */
+            queue_add(q, curr_string_board);
+            /* Add curr: prev to hashmap*/
+            hashmap_put(m, curr_string_board, prev_string_board);
+        }
+        /* Reset to state before explore */
+        board_move_down(board);
+
+    }
+    return;
+}
+
+
 int main(int argc, char *argv[])
 {
     if (argc != 3)
@@ -46,10 +169,18 @@ int main(int argc, char *argv[])
     printf("%s\n", string_board);
 
     Board* board = board_init(dimension);
+    Queue* q = queue_init();
+    HashMap* m = hashmap_init();
+
     board_to_matrix(board, string_board);
+    printf("INITIAL MATRIX BEFORE BFS:\n");
     board_print(board);
 
+    bfs(board, q, m);
+
     board_free(board);
+    queue_free(q);
+    hashmap_free(m);
     fclose(test_file);
     fclose(output);
 

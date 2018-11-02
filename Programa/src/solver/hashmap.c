@@ -261,6 +261,8 @@ int hashmap_put(HashMap* m, char* key, char* value){
     m->data[index].in_use = 1;
     m->size++; 
 
+    printf("PUT %s AT: %d\n", key, index);
+
     return MAP_OK;
 }
 
@@ -274,6 +276,13 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     /* Find data location */
     curr = hashmap_hash_int(m, key);
 
+    printf("TRYING TO GET AT: %d\n", curr);
+
+    if (m->data[curr].in_use == 0)
+    {
+      return MAP_MISSING;
+    }
+
     /* Linear probing, if necessary */
     for(i = 0; i<MAX_CHAIN_LENGTH; i++){
 
@@ -282,6 +291,7 @@ int hashmap_get(HashMap* m, char* key, char* arg){
             if (strcmp(m->data[curr].key, key)==0){
                 strcpy(arg, m->data[curr].data);
                 //*arg = m->data[curr].data;
+                printf("found at index: %d, key: %s\n", curr, m->data[curr].key);
                 return MAP_OK;
             }
         }
@@ -289,16 +299,16 @@ int hashmap_get(HashMap* m, char* key, char* arg){
         curr = (curr + 1) % m->table_size;
     }
 
-    *arg = NULL;
-
+    // *arg = NULL;
     /* Not found */
     return MAP_MISSING;
 }
 
 bool hashmap_in_map(HashMap* m, char* key) {
-  char arg[] = "";
+  char arg[17] = "";
 
   if (hashmap_get(m, key, arg) == MAP_OK) {
+    printf("key %s already in map\n", key);
     return true;
   }
 
