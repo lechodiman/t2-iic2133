@@ -5,7 +5,7 @@
 #include "queue.h"
 #include "hashmap.h"
 #include "board.h"
-
+#include "stack.h"
 
 void bfs(Board* board, Queue* q, HashMap* m)
 {
@@ -175,16 +175,30 @@ int main(int argc, char *argv[])
     Board* board = board_init(dimension);
     Queue* q = queue_init();
     HashMap* m = hashmap_init();
+    Stack* s = stack_init();
 
     board_to_matrix(board, string_board);
     printf("INITIAL MATRIX BEFORE BFS:\n");
     board_print(board);
 
-    bfs(board, q, m);
+    // bfs(board, q, m);
+    // write_path(m, s);
+
+    stack_add(s, "123456780");
+    stack_add(s, "123456708");
+
+    char out_stack[17] = "";
+
+    while (!stack_is_empty(s))
+    {
+        stack_remove(s, out_stack);
+        printf("REMOVED: %s\n", out_stack);        
+    }    
 
     board_free(board);
     queue_free(q);
     hashmap_free(m);
+    stack_free(s);
     fclose(test_file);
     fclose(output);
 

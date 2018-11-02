@@ -278,7 +278,7 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     /* Find data location */
     curr = hashmap_hash_int(m, key);
 
-    printf("TRYING TO INSERT: %s AT: %d\n", key, curr);
+    printf("TRYING TO GET: %s AT: %d\n", key, curr);
 
     /* If curr is not in use, return */
     if (m->data[curr].in_use == 0)
@@ -294,7 +294,7 @@ int hashmap_get(HashMap* m, char* key, char* arg){
             if (strcmp(m->data[curr].key, key)==0){
                 strcpy(arg, m->data[curr].data);
                 //*arg = m->data[curr].data;
-                printf("found at index: %d, key: %s\n", curr, m->data[curr].key);
+                printf("found at index: %d, key found: %s\n", curr, m->data[curr].key);
                 return MAP_OK;
             }
         }
