@@ -5,8 +5,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#define INITIAL_SIZE (16384)
-#define MAX_CHAIN_LENGTH (16384)
+#define INITIAL_SIZE (32728)
+#define MAX_CHAIN_LENGTH (32728)
 
 /*
  * Return an empty hashmap, or NULL on failure.
@@ -304,7 +304,7 @@ int hashmap_put(HashMap* m, char* key, char* value){
     m->data[index].in_use = 1;
     m->size++; 
 
-    printf("PUT %s AT: %d\n", key, index);
+    // printf("PUT %s AT: %d\n", key, index);
 
     return MAP_OK;
 }
@@ -353,7 +353,7 @@ bool hashmap_in_map(HashMap* m, char* key) {
   char arg[17] = "";
 
   if (hashmap_get(m, key, arg) == MAP_OK) {
-    printf("THIS TABLE %s ALREADY IN MAP\n", key);
+    // printf("THIS TABLE %s ALREADY IN MAP\n", key);
     return true;
   }
 

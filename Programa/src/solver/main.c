@@ -56,8 +56,9 @@ void bfs(Board* board, Queue* q, HashMap* m)
 {
     char initial_string_board[17] = "";
     board_to_string(board, initial_string_board);
-    printf("initial_string_board: %s\n", initial_string_board);
-    FILE* states_file = fopen("states.txt", "w");
+    // printf("initial_string_board: %s\n", initial_string_board);
+    
+    // FILE* states_file = fopen("states.txt", "w");
 
     queue_add(q, initial_string_board);
     hashmap_put(m, initial_string_board, "start");
@@ -66,7 +67,7 @@ void bfs(Board* board, Queue* q, HashMap* m)
 
     if (board_is_solution(board))
     {
-        printf("Solution found!\n");
+        // printf("Solution found!\n");
         return;
     }
 
@@ -84,15 +85,15 @@ void bfs(Board* board, Queue* q, HashMap* m)
         queue_remove(q, prev_string_board);
         /* Insert state to board */
         board_to_matrix(board, prev_string_board);
-        printf("EXPLORING NEW MATRIX:\n");
-        board_print(board);
+        // printf("EXPLORING NEW MATRIX:\n");
+        // board_print(board);
 
         /* If it is solution*/
         if (board_is_solution(board) && !solved)
         {
             solved = true;
-            printf("Solution found!\n");
-            fclose(states_file);
+            // printf("Solution found!\n");
+            // fclose(states_file);
             return;
         }
 
@@ -105,12 +106,12 @@ void bfs(Board* board, Queue* q, HashMap* m)
         /* If state not in hashmap*/
         if (!hashmap_in_map(m, curr_string_board))
         {
-            printf("ADDED LEFT:\n");
-            board_print(board);
+            // printf("ADDED LEFT:\n");
+            // board_print(board);
 
             /* Add to queue*/
             queue_add(q, curr_string_board);
-            fprintf(states_file, "%s\n", curr_string_board);
+            // fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
         }
@@ -125,12 +126,12 @@ void bfs(Board* board, Queue* q, HashMap* m)
         /* If state not in hashmap*/
         if (!hashmap_in_map(m, curr_string_board))
         {   
-            printf("ADDED RIGHT:\n");
-            board_print(board);
+            // printf("ADDED RIGHT:\n");
+            // board_print(board);
 
             /* Add to queue */
             queue_add(q, curr_string_board);
-            fprintf(states_file, "%s\n", curr_string_board);
+            // fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
         }
@@ -144,12 +145,12 @@ void bfs(Board* board, Queue* q, HashMap* m)
         /* If state not in hashmap*/
         if (!hashmap_in_map(m, curr_string_board))
         {   
-            printf("ADDED DOWN:\n");
-            board_print(board);
+            // printf("ADDED DOWN:\n");
+            // board_print(board);
 
             /* Add to queue */
             queue_add(q, curr_string_board);
-            fprintf(states_file, "%s\n", curr_string_board);
+            // fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
         }
@@ -163,12 +164,12 @@ void bfs(Board* board, Queue* q, HashMap* m)
         /* If state not in hashmap*/
         if (!hashmap_in_map(m, curr_string_board))
         {   
-            printf("ADDED UP:\n");
-            board_print(board);
+            // printf("ADDED UP:\n");
+            // board_print(board);
 
             /* Add to queue */
             queue_add(q, curr_string_board);
-            fprintf(states_file, "%s\n", curr_string_board);
+            // fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
 
@@ -206,7 +207,7 @@ int main(int argc, char *argv[])
 
     fscanf(test_file, "%d\n", &dimension);
 
-    printf("DIMENSION: %d\n", dimension);
+    // printf("DIMENSION: %d\n", dimension);
 
     int i = 0;
     for (int row = 0; row < dimension; ++row)
@@ -223,16 +224,14 @@ int main(int argc, char *argv[])
         }
     }
 
-    printf("%s\n", string_board);
-
     Board* board = board_init(dimension);
     Queue* q = queue_init();
     HashMap* m = hashmap_init();
     Stack* s = stack_init();
 
     board_to_matrix(board, string_board);
-    printf("INITIAL MATRIX BEFORE BFS:\n");
-    board_print(board);
+    // printf("INITIAL MATRIX BEFORE BFS:\n");
+    // board_print(board);
 
     bfs(board, q, m);
     write_path(board, m, s, output);
