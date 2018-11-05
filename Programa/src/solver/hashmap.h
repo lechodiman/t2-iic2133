@@ -20,11 +20,14 @@ typedef struct hashmap_node{
     char key[17];
     int in_use;
     char data[17];
+    int n_collisions;
 } HashmapNode;
 
 typedef struct hashmap_map{
     int table_size;
     int size;
+    int n_rehashing;
+    double time_spent_rehashing;
     /* Pointer to array of hashmap nodes*/
     HashmapNode* data;
 } HashMap;
@@ -33,4 +36,6 @@ HashMap* hashmap_init();
 int hashmap_put(HashMap* m, char* key, char* value);
 int hashmap_get(HashMap* m, char* key, char* arg);
 bool hashmap_in_map(HashMap* m, char* key);
+void hashmap_collisions_csv(HashMap* m);
+void hashmap_rehashing_csv(HashMap* m);
 void hashmap_free(HashMap* m);

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #define INITIAL_SIZE (32728)
@@ -28,6 +29,7 @@ HashMap* hashmap_init() {
 
     m->table_size = INITIAL_SIZE;
     m->size = 0;
+    m->n_rehashing = 0;
 
     return m;
 }
@@ -228,7 +230,27 @@ int hashmap_hash(HashMap* m, char* key){
     curr = hashmap_hash_int(m, key);
 
     /* Linear probing */
+
+    /*
     for(i = 0; i< MAX_CHAIN_LENGTH; i++){
+        if(m->data[curr].in_use == 0)
+            return curr;
+
+        // If node is in use but it is being used by the same key
+        if(m->data[curr].in_use == 1 && (strcmp(m->data[curr].key,key)==0))
+            return curr;
+
+        //  else, count as collision
+        m->data[curr].n_collisions++;
+
+        // Get new node
+        curr = (curr + 1) % m->table_size;
+    }
+    */
+
+    /* Quadratic probing */
+    for (i = 0;i<m->table_size; ++i)
+    {
         if(m->data[curr].in_use == 0)
             return curr;
 
@@ -236,7 +258,11 @@ int hashmap_hash(HashMap* m, char* key){
         if(m->data[curr].in_use == 1 && (strcmp(m->data[curr].key,key)==0))
             return curr;
 
-        curr = (curr + 1) % m->table_size;
+        /* else, count as collision */
+        m->data[curr].n_collisions++;
+
+        /* Get new node */
+        curr = (curr + (1/2)*i + (1/2)*i*i) % m->table_size;
     }
 
     return MAP_FULL;
@@ -246,6 +272,9 @@ int hashmap_hash(HashMap* m, char* key){
  * Doubles the size of the hashmap, and rehashes all the elements
  */
 int hashmap_rehash(HashMap* m){
+    /* Begin time count */
+    clock_t begin = clock();
+
     int i;
     int old_size;
     HashmapNode* curr;
@@ -277,6 +306,14 @@ int hashmap_rehash(HashMap* m){
     }
 
     free(curr);
+    m->n_rehashing++;
+
+    /* End time count */
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    /* Add this execution to total time spent on rehashing*/
+    m->time_spent_rehashing += time_spent;
 
     return MAP_OK;
 }
@@ -329,22 +366,37 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     }
 
     /* Else, if it is used, do linear probing */
+    /*
     for(i = 0; i<MAX_CHAIN_LENGTH; i++){
 
         int in_use = m->data[curr].in_use;
         if (in_use == 1){
             if (strcmp(m->data[curr].key, key)==0){
                 strcpy(arg, m->data[curr].data);
-                //*arg = m->data[curr].data;
-                // printf("found at index: %d, key found: %s\n", curr, m->data[curr].key);
                 return MAP_OK;
             }
         }
 
         curr = (curr + 1) % m->table_size;
     }
+    */
 
-    // *arg = NULL;
+    /* Or Quadraic probing */
+    for(i = 0; i<m->table_size; i++){
+
+        int in_use = m->data[curr].in_use;
+        if (in_use == 1){
+            if (strcmp(m->data[curr].key, key)==0){
+                strcpy(arg, m->data[curr].data);
+                return MAP_OK;
+            }
+        }
+
+        curr = (curr + (1/2)*i + (1/2)*i*i) % m->table_size;
+    }
+
+
+
     /* Not found */
     return MAP_MISSING;
 }
@@ -358,6 +410,33 @@ bool hashmap_in_map(HashMap* m, char* key) {
   }
 
   return false;
+}
+
+void hashmap_rehashing_csv(HashMap* m)
+{
+    FILE* rehashing_file = fopen("rehashing_stats.csv", "w");
+
+    /* Write header */
+    fprintf(rehashing_file, "n_rehashing,total_time\n");
+
+    fprintf(rehashing_file, "%d,%f\n", m->n_rehashing, m->time_spent_rehashing);
+
+    fclose(rehashing_file);
+}
+
+void hashmap_collisions_csv(HashMap* m)
+{
+    FILE* collisions_file = fopen("n_collisions.csv", "w");
+
+    /* Write header */
+    fprintf(collisions_file, "index,n\n");
+
+    for (int i = 0; i < m->table_size; ++i)
+    {
+        fprintf(collisions_file, "%d,%d\n", i, m->data[i].n_collisions);
+    }
+
+    fclose(collisions_file);
 }
 
 /* Deallocate the hashmap */

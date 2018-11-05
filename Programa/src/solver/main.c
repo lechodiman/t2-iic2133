@@ -57,8 +57,7 @@ void bfs(Board* board, Queue* q, HashMap* m)
     char initial_string_board[17] = "";
     board_to_string(board, initial_string_board);
     // printf("initial_string_board: %s\n", initial_string_board);
-    
-    // FILE* states_file = fopen("states.txt", "w");
+    FILE* states_file = fopen("states.txt", "w");
 
     queue_add(q, initial_string_board);
     hashmap_put(m, initial_string_board, "start");
@@ -93,7 +92,7 @@ void bfs(Board* board, Queue* q, HashMap* m)
         {
             solved = true;
             // printf("Solution found!\n");
-            // fclose(states_file);
+            fclose(states_file);
             return;
         }
 
@@ -111,7 +110,7 @@ void bfs(Board* board, Queue* q, HashMap* m)
 
             /* Add to queue*/
             queue_add(q, curr_string_board);
-            // fprintf(states_file, "%s\n", curr_string_board);
+            fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
         }
@@ -131,7 +130,7 @@ void bfs(Board* board, Queue* q, HashMap* m)
 
             /* Add to queue */
             queue_add(q, curr_string_board);
-            // fprintf(states_file, "%s\n", curr_string_board);
+            fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
         }
@@ -150,7 +149,7 @@ void bfs(Board* board, Queue* q, HashMap* m)
 
             /* Add to queue */
             queue_add(q, curr_string_board);
-            // fprintf(states_file, "%s\n", curr_string_board);
+            fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
         }
@@ -169,7 +168,7 @@ void bfs(Board* board, Queue* q, HashMap* m)
 
             /* Add to queue */
             queue_add(q, curr_string_board);
-            // fprintf(states_file, "%s\n", curr_string_board);
+            fprintf(states_file, "%s\n", curr_string_board);
             /* Add curr: prev to hashmap*/
             hashmap_put(m, curr_string_board, prev_string_board);
 
@@ -234,6 +233,8 @@ int main(int argc, char *argv[])
     // board_print(board);
 
     bfs(board, q, m);
+    hashmap_collisions_csv(m);
+    hashmap_rehashing_csv(m);
     write_path(board, m, s, output);
 
     board_free(board);
