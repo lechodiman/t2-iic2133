@@ -6,8 +6,8 @@
 #include <time.h>
 #include <unistd.h>
 
-#define INITIAL_SIZE (32728)
-#define MAX_CHAIN_LENGTH (32728)
+#define INITIAL_SIZE (1024)
+#define MAX_CHAIN_LENGTH (1024)
 
 /*
  * Return an empty hashmap, or NULL on failure.
@@ -271,6 +271,8 @@ int hashmap_hash(HashMap* m, char* key){
  */
 int hashmap_rehash(HashMap* m){
     /* Begin time count */
+    m->n_rehashing++;
+
     clock_t begin = clock();
 
     int i;
@@ -280,7 +282,16 @@ int hashmap_rehash(HashMap* m){
     /* Setup the new elements */
     HashmapNode* temp = (HashmapNode *)
         calloc(2 * m->table_size, sizeof(HashmapNode));
-    if(!temp) return MAP_OMEM;
+    if (!temp)
+    {
+        clock_t end = clock();
+        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+        /* Add this execution to total time spent on rehashing*/
+        m->time_spent_rehashing += time_spent;
+
+        return MAP_OMEM;  
+    } 
 
     /* Update the array */
     curr = m->data;
@@ -300,11 +311,18 @@ int hashmap_rehash(HashMap* m){
             
         status = hashmap_put(m, curr[i].key, curr[i].data);
         if (status != MAP_OK)
+        {
+            clock_t end = clock();
+            double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+            /* Add this execution to total time spent on rehashing*/
+            m->time_spent_rehashing += time_spent;
+
             return status;
+        }
     }
 
     free(curr);
-    m->n_rehashing++;
 
     /* End time count */
     clock_t end = clock();
