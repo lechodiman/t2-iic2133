@@ -6,8 +6,8 @@
 #include <time.h>
 #include <unistd.h>
 
-#define INITIAL_SIZE (1024)
-#define MAX_CHAIN_LENGTH (1024)
+#define INITIAL_SIZE (256)
+#define MAX_CHAIN_LENGTH (256)
 
 /*
  * Return an empty hashmap, or NULL on failure.
@@ -432,6 +432,7 @@ void hashmap_rehashing_csv(HashMap* m)
     FILE* rehashing_file = fopen("rehashing_stats.csv", "w");
 
     /* Write header */
+    fprintf(rehashing_file, "sep=,\n");
     fprintf(rehashing_file, "n_rehashing,total_time\n");
 
     fprintf(rehashing_file, "%d,%f\n", m->n_rehashing, m->time_spent_rehashing);
@@ -444,6 +445,7 @@ void hashmap_collisions_csv(HashMap* m)
     FILE* collisions_file = fopen("n_collisions.csv", "w");
 
     /* Write header */
+    fprintf(collisions_file, "sep=,\n");
     fprintf(collisions_file, "index,n\n");
 
     for (int i = 0; i < m->table_size; ++i)
