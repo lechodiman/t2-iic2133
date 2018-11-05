@@ -230,8 +230,6 @@ int hashmap_hash(HashMap* m, char* key){
     curr = hashmap_hash_int(m, key);
 
     /* Linear probing */
-
-    /*
     for(i = 0; i< MAX_CHAIN_LENGTH; i++){
         if(m->data[curr].in_use == 0)
             return curr;
@@ -246,25 +244,25 @@ int hashmap_hash(HashMap* m, char* key){
         // Get new node
         curr = (curr + 1) % m->table_size;
     }
-    */
 
     /* Quadratic probing */
+    /*
     for (i = 0;i<m->table_size; ++i)
     {
         if(m->data[curr].in_use == 0)
             return curr;
 
-        /* If node is in use but it is being used by the same key*/
+        //  If node is in use but it is being used by the same ke
         if(m->data[curr].in_use == 1 && (strcmp(m->data[curr].key,key)==0))
             return curr;
 
-        /* else, count as collision */
+        //  else, count as collision
         m->data[curr].n_collisions++;
 
-        /* Get new node */
+        //  Get new node
         curr = (curr + (1/2)*i + (1/2)*i*i) % m->table_size;
     }
-
+    */
     return MAP_FULL;
 }
 
@@ -366,7 +364,6 @@ int hashmap_get(HashMap* m, char* key, char* arg){
     }
 
     /* Else, if it is used, do linear probing */
-    /*
     for(i = 0; i<MAX_CHAIN_LENGTH; i++){
 
         int in_use = m->data[curr].in_use;
@@ -379,9 +376,9 @@ int hashmap_get(HashMap* m, char* key, char* arg){
 
         curr = (curr + 1) % m->table_size;
     }
-    */
 
     /* Or Quadraic probing */
+    /*
     for(i = 0; i<m->table_size; i++){
 
         int in_use = m->data[curr].in_use;
@@ -394,7 +391,7 @@ int hashmap_get(HashMap* m, char* key, char* arg){
 
         curr = (curr + (1/2)*i + (1/2)*i*i) % m->table_size;
     }
-
+    */
 
 
     /* Not found */
